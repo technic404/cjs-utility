@@ -1,15 +1,14 @@
-<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.technic404.cjsutility</id>
     <name>cjs-utility</name>
     <vendor>technic404</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>JavaScript</depends>
+    <extensions defaultExtensionNs="JavaScript">
+        <frameworkIndexingHandler implementation="pl.technic404.cjs.CjsFrameworkHandler"/>
+<!--        <jsDocCustomTagsHandler implementation="pl.technic404.plugin.CjsDocTagsHandler"/>-->
+    </extensions>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
-
-    <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.technic404.cjsutility.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.technic404.cjsutility.startup.MyProjectActivity" />
-    </extensions>
 </idea-plugin>
