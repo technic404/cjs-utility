@@ -7,7 +7,7 @@
     <depends>JavaScript</depends>
     <extensions defaultExtensionNs="JavaScript">
         <frameworkIndexingHandler implementation="pl.technic404.cjs.CjsFrameworkHandler"/>
-<!--        <jsDocCustomTagsHandler implementation="pl.technic404.plugin.CjsDocTagsHandler"/>-->
+        <jsTypeProcessor implementation="pl.technic404.cjs.CjsCallTypeProvider"/>
     </extensions>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
