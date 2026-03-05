@@ -51,6 +51,62 @@ import static pl.technic404.cjs.Constants.METHODS;
 
 public class CjsFrameworkHandler extends FrameworkIndexingHandler {
 
+//    @Override
+//    public @Nullable JSElementIndexingDataImpl processClass(@NotNull JSClass jsClass,
+//                                                            @Nullable JSElementIndexingDataImpl data) {
+//
+//        PsiElement parent = jsClass.getParent();
+//
+//        System.out.println("parent.getText() " + parent.getText());
+//
+//        if (!(parent instanceof JSNewExpression)) return data;
+//
+//        PsiElement variableCandidate = parent.getParent();
+//        if (!(variableCandidate instanceof JSVariable)) return data;
+//
+//        System.out.println("variableCandidate.getText() " + variableCandidate.getText());
+//
+//        JSVariable variable = (JSVariable) variableCandidate;
+//
+//        JSDocComment docComment = findJSDoc(variable);
+//        if (docComment == null) {
+//            return data;
+//        }
+//
+//        System.out.println("docComment.getText() " + docComment.getText());
+//
+//        Matcher matcher = CJS_TAG_PATTERN.matcher(docComment.getText());
+//        if (!matcher.find()) {
+//            return data;
+//        }
+//
+//
+//        String customType = matcher.group(1).trim();
+//
+//        System.out.println("customType: " + customType);
+//
+//
+//        if (data == null) {
+//            data = new JSElementIndexingDataImpl();
+//        }
+//
+//        JSTypeSource source = JSTypeSourceFactory.createTypeSource(jsClass, true);
+//
+//        JSType type = JSTypeParser.createType(
+//                jsClass.getProject(),
+//                customType,
+//                source
+//        );
+//
+//        JSImplicitElementImpl element = new JSImplicitElementImpl.Builder("data", jsClass)
+//                .setType(type)
+//                .setUserString("cjs")
+//                .toImplicitElement();
+//
+//        data.addImplicitElement(element);
+//
+//        return data;
+//    }
 
     private static final Pattern CJS_TAG_PATTERN = Pattern.compile("@cjs\\s*\\{([^}]+)}");
     private static final Logger log = LoggerFactory.getLogger(CjsFrameworkHandler.class);
@@ -64,6 +120,42 @@ public class CjsFrameworkHandler extends FrameworkIndexingHandler {
                                          @NotNull JSEvaluateContext context,
                                          @NotNull PsiElement resolveResult) {
 
+        if(resolveResult instanceof JSField) {
+            JSField field = (JSField) resolveResult;
+
+            if (!"data".equals(field.getName())) return false;
+
+            JSClass jsClass = PsiTreeUtil.getParentOfType(field, JSClass.class);
+            if (jsClass == null) return false;
+
+            PsiElement parent = jsClass.getParent();
+            if (!(parent instanceof JSNewExpression)) return false;
+
+            PsiElement variableCandidate = parent.getParent();
+            if (!(variableCandidate instanceof JSVariable)) return false;
+
+            JSVariable variable = (JSVariable) variableCandidate;
+
+            JSDocComment docComment = findJSDoc(variable);
+            if (docComment == null) return false;
+
+            Matcher matcher = CJS_TAG_PATTERN.matcher(docComment.getText());
+            if (!matcher.find()) return false;
+
+            String customType = matcher.group(1).trim();
+
+            JSTypeSource source = JSTypeSourceFactory.createTypeSource(field, true);
+
+            JSType type = JSTypeParser.createType(
+                    field.getProject(),
+                    customType,
+                    source
+            );
+
+            evaluator.addType(type);
+
+            return true;
+        }
 
         if (!(resolveResult instanceof JSVariable)) return false;
 
