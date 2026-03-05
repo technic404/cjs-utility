@@ -9,6 +9,9 @@
         <frameworkIndexingHandler implementation="pl.technic404.cjs.CjsFrameworkHandler"/>
         <jsTypeProcessor implementation="pl.technic404.cjs.CjsCallTypeProvider"/>
     </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <annotator language="JavaScript" implementationClass="pl.technic404.cjs.CjsAnnotator"/>
+    </extensions>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 </idea-plugin>
