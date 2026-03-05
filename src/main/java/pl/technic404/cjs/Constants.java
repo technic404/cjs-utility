@@ -24,6 +24,6 @@ public class Constants {
             (e) -> List.of("querySelector", "(...selectors: string[]): HTMLElement|null|HTMLElement[]"),
             (e) -> List.of("querySelectorAll", "(...selectors: string[]): HTMLElement[]|Element[]"),
             (e) -> List.of("exists", "(): boolean"),
-            (e) -> List.of("fillHeight", "(offset: number, maxHeight: number|undefined): boolean")
+            (e) -> List.of("fillHeight", "(offset: number, maxHeight: number|undefined): void")
         );
 }
